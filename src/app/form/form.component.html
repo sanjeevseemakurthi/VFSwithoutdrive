@@ -1,0 +1,170 @@
+
+<input type="date" [(ngModel)]="daysheetdate">
+<mat-tab-group animationDuration="0ms">
+    <mat-tab label="Readings">
+        <div class="row card">
+            <div class="col-2"></div>
+            <div class="col-7 ">
+                <div class="row">
+                </div>
+                <div class="readings">
+                    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 mattablestyle">
+                        <ng-container *ngFor="let item of displayedColumns">
+                            <ng-container *ngIf="item === 'closing' || item === 'testing' || item === 'price';else noneditcols ">
+                                <ng-container [matColumnDef]="item">
+                                    <th mat-header-cell *matHeaderCellDef class="cell_head"> {{item | titlecase}} </th>
+                                    <td mat-cell *matCellDef="let element" class="cell_head" >
+                                        <input type="number" [(ngModel)]="element[item]" (change)="readingrowchanged(element)" [ngClass]="{readingsinput: item !== 'closing'}">
+                                    </td>
+                                </ng-container>
+                            </ng-container>
+                            <ng-template #noneditcols >
+                                <ng-container [matColumnDef]="item">
+                                    <th mat-header-cell *matHeaderCellDef class="cell_head"> {{item | titlecase}} </th>
+                                    <td mat-cell *matCellDef="let element" class="cell_head" >
+                                        {{ element[item]}}
+                                    </td>
+                                </ng-container>
+                            </ng-template>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                    <div class="totaloildisp">
+                        Totals : {{totaloils.toFixed(2)}}
+                    </div>
+                </div>
+            </div>
+         
+        </div>
+    </mat-tab>
+    <mat-tab label="Engine Oils">
+        <div class="row card">
+            <div class="col-2"></div>
+            <div class="col-7 ">
+                <div class="row">
+                </div>
+                <div class="row" style="padding: 10px;">
+                    <div class="headercol">
+                       Engine Oil
+                    </div>
+                    <div class="col">
+                        QTY
+                    </div>
+                    <div class="col">
+                        price
+                    </div>
+                  
+                </div>
+                <ng-container *ngFor="let eachoil of engineoils;index as i">
+                    <div class="row">
+                        <div class="col enginerow">
+                            <div>
+                                <mat-form-field appearance="fill">
+                                    <mat-label>Select Engineoil</mat-label>
+                                    <mat-select (selectionChange)="engineoilselected($event,i)">
+                                    <mat-option *ngFor="let oil of engineoilsoptions" [value] = "oil" >
+                                        {{oil.name}}
+                                    </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="lowsize">
+                                <input type="number" [(ngModel)]="eachoil.qty" class="lowsize">
+                            </div>
+                            <div class="lowsize">
+                                <input type="number" [(ngModel)]="eachoil.price" class="lowsize" (change)="engineoilpricechange()">
+                            </div>
+                            <div class="lowsize">
+                                <button style="color: red;" (click)="removeengineoil(i)" class="buttonBg">X</button>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+                <div class="totaloildisp">
+                    Totals : {{totalengineoils.toFixed(2)}}
+                </div>
+                <div class="addbutton">
+                    Add &nbsp;
+                    <input type="number" [(ngModel)]="page" class="buttonBg" style="width: 40px;" >
+                    More Oils
+                    <button type="submit" class="buttonBg" (click) = "addengineoils()">
+                        ✓
+                    </button>
+                 
+                </div>
+            </div>
+        </div>
+    </mat-tab>
+    <mat-tab label="Perticulars">
+        <div class="row card">
+            <div class="col-2"></div>
+            <div class="col-7 ">
+                <div class="row">
+                </div>
+                <div class="row" style="padding: 10px;">
+                    <div class="headercol">
+                        Accounts
+                    </div>
+                    <div class="col">
+                        Credit
+                    </div>
+                    <div class="col">
+                        Debit
+                    </div>
+                 
+                </div>
+                <ng-container *ngFor="let account of perticulars;index as i">
+                    <div class="row perticularrow">
+                        <div class="col enginerow">
+                            <div>
+                                <mat-form-field appearance="fill">
+                                    <mat-select (selectionChange)="perticularsselected($event,i)"  [(value)]="account.id" [disabled] = "account.disable">
+                                    <mat-option *ngFor="let acc of perticularoptons" [value] = "acc.id" >
+                                        {{acc.name}}
+                                    </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="lowsize">
+                                <input type="number" [(ngModel)]="account.credit" class="lowsize" (change) = "perticularchage()"  [disabled] = "account.disable">
+                            </div>
+                            <div class="lowsize">
+                                <input type="number" [(ngModel)]="account.debit" class="lowsize"  (change) = "perticularchage()"  [disabled] = "account.disable">
+                            </div>
+                            <div class="lowsize">
+                                <button style="color: red;" (click)="removeperticular(i)" class="buttonBg" [disabled] = "account.disable" >X</button>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+                <div class="row">
+                </div>
+                <div class="row" style="padding: 10px;">
+                    <div class="headercol">
+                        Total : {{leftovercash}}
+                    </div>
+                    <div class="col">
+                        {{credit}}
+                    </div>
+                    <div class="col">
+                        {{debit}}
+                    </div>
+                 
+                </div>
+                <div class="addbutton">
+                    Add &nbsp;
+                    <input type="number" [(ngModel)]="page" class="buttonBg" style="width: 40px;" >
+                    More Transactions
+                    <button type="submit" class="buttonBg" (click) = "addperticulars()">
+                        ✓
+                    </button>
+                 
+                </div>
+            </div>
+        </div>
+        <button type="submit" (click) = "confirmsubmission()">
+            Submit
+        </button>
+    </mat-tab>
+</mat-tab-group>

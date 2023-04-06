@@ -1,0 +1,43 @@
+.cell_head {
+    padding: 10px;
+    border: 1px solid black;
+}
+.mattablestyle {
+    border: 0px;
+}
+.readingsinput {
+   outline: none;
+   width: 65px;
+}
+.readings{
+    margin: 10px;
+}
+.lowsize {
+    width: 80px;
+}
+.buttonBg {
+    border: none;
+    background-color: transparent;
+}
+.enginerow{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.headercol{
+    width: 250px;
+}
+.mat-form-field-appearance-fill .mat-form-field-flex {
+    background-color: rgba(0,0,0,0) !important;
+}
+.card{
+    margin: 10px;
+}
+.addbutton{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+.perticularrow {
+    border-bottom: 1px solid black;
+}

@@ -3,14 +3,11 @@
     border: 1px solid black;
 }
 .mattablestyle {
-    border: 0px;
+    border-radius: 5px;
 }
 .readingsinput {
    outline: none;
    width: 65px;
-}
-.readings{
-    margin: 10px;
 }
 .lowsize {
     width: 80px;
@@ -40,4 +37,30 @@
 }
 .perticularrow {
     border-bottom: 1px solid black;
+}
+.Bgimage {
+    width: 100%;
+    height: 100%;
+    background-image: url("../../assets/portfolio-2.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    padding: 20px;
+}
+.mat-tab-label .mat-tab-label-content {
+    opacity: 1 !important;
+    color: white !important;
+}
+.test {
+    color: white !important;
+}
+.mat-select-arrow {
+    color: white;
+}
+.Matbg {
+    background-color: white;
+    border-radius: 5px;
+}
+.totaloildisp {
+    color: rgb(175, 20, 20);
+    padding: 10px;
 }

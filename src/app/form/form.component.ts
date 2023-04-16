@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import * as XLSX from 'xlsx';
-import {forEach, cloneDeep as loadashclonedeep} from 'lodash';
+import { forEach, cloneDeep as loadashclonedeep } from 'lodash';
 import { ServicesService } from '../services.service';
+import { DatePipe } from '@angular/common';
+
 @Component({
   selector: 'app-form',
   templateUrl: './form.component.html',
@@ -9,12 +11,12 @@ import { ServicesService } from '../services.service';
 })
 export class FormComponent implements OnInit {
 
-  constructor(public formservice:ServicesService) { }
+  constructor(public formservice: ServicesService, public datePipe: DatePipe) { }
   readings = [];
-  engineoils  : any[] = [];
-  perticulars : any[] = [];
-  displayedColumns = ['pump','type','closing','opening','testing','totallts','price','cost']
-  dataSource : any[] = [];
+  engineoils: any[] = [];
+  perticulars: any[] = [];
+  displayedColumns = ['pump', 'type', 'closing', 'opening', 'testing', 'totallts', 'price', 'cost']
+  dataSource: any[] = [];
   engineoilsoptions: any;
   perticularoptons: any;
   totaloils = 0.0;
@@ -24,75 +26,83 @@ export class FormComponent implements OnInit {
   debit = 0.0;
   page = 1;
   daysheetdate = new Date();
+  fileids: any = {};
   ngOnInit(): void {
-    this.readExcelFile();
+    this.formservice.getAllfiles().subscribe((res: any) => {
+      res.files.forEach((res: any) => {
+        let name = res.name.split('.')[0];
+        let fileid = res.id;
+        this.fileids[name] = fileid;
+      })
+      this.readExcelFile();
+    })
   }
   readExcelFile() {
-    this.formservice.readingscall('readings').subscribe(data => {
-        const workbook = XLSX.read(data, { type: 'array' });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-        const excelData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-        let hold = excelData;
-        let resultdata: any[] = [];
-        hold.forEach((element:any) => {
-          let row = {
-            pump: element[0],
-            opening:element[1],
-            closing:element[1],
-            type : element[2],
-            price:element[3],
-            testing:5
-            
-          }
-           resultdata.push(row);
-        });
-       this.dataSource = resultdata;
-       this.initialcaluclatins();
+    this.formservice.readingfiles(this.fileids['readings']).subscribe(data => {
+      const workbook = XLSX.read(data, { type: 'array' });
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+      const excelData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+      let hold = excelData;
+      let resultdata: any[] = [];
+      hold.forEach((element: any) => {
+        let row = {
+          pump: element[0],
+          opening: element[1],
+          closing: element[1],
+          type: element[2],
+          price: element[3],
+          testing: 5
+
+        }
+        resultdata.push(row);
       });
-      this.formservice.readingscall('engineoils').subscribe(data => {
-        const workbook = XLSX.read(data, { type: 'array' });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-        const excelData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-        let hold = excelData;
-        let resultdata: any[] = [];
-        hold.forEach((element : any)=> {
-          let row = {
-            name : element[0],
-            qty : element[1],
-            id: element[2]
-          }
-          resultdata.push(row);
-        });
-        this.engineoilsoptions = resultdata;
+      this.dataSource = resultdata;
+      this.initialcaluclatins();
+    });
+    this.formservice.readingfiles(this.fileids['engineoils']).subscribe(data => {
+      const workbook = XLSX.read(data, { type: 'array' });
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+      const excelData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+      let hold = excelData;
+      let resultdata: any[] = [];
+      hold.forEach((element: any) => {
+        let row = {
+          name: element[0],
+          qty: element[1],
+          id: element[2]
+        }
+        resultdata.push(row);
       });
-      this.formservice.readingscall('perticulars').subscribe(data => {
-        const workbook = XLSX.read(data, { type: 'array' });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-        const excelData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-        let hold = excelData;
-        let resultdata: any[] = [];
-        hold.forEach((element : any,index :number)=> {
-          let row = {
-            name : element[0],
-            balance : element[1],
-            id: index,
-          }
-          resultdata.push(row);
-        });
-        this.perticularoptons = resultdata;
-        this.customperticulars();
+      this.engineoilsoptions = resultdata;
+    });
+    this.formservice.readingfiles(this.fileids['perticulars']).subscribe(data => {
+      const workbook = XLSX.read(data, { type: 'array' });
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+      const excelData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+      let hold = excelData;
+      let resultdata: any[] = [];
+      hold.forEach((element: any, index: number) => {
+        let row = {
+          name: element[0],
+          balance: element[1],
+          id: index,
+        }
+        resultdata.push(row);
       });
-    }
-   // for readings row change
-   readingrowchanged(element : any) {
+      this.perticularoptons = resultdata;
+      this.customperticulars();
+    });
+  }
+  // for readings row change
+  readingrowchanged(element: any) {
     let result = this.dataSource;
     let index = element.pump - 1;
     this.totaloils = this.totaloils - parseFloat(result[index].cost);
     result[index].totallts = result[index].closing - result[index].opening - result[index].testing;
-    result[index].cost = (result[index].totallts * result[index].price).toFixed(2); 
+    result[index].cost = (result[index].totallts * result[index].price).toFixed(2);
     this.totaloils = this.totaloils + parseFloat(result[index].cost);
     this.perticulars[2].credit = this.totaloils;
   }
@@ -117,125 +127,139 @@ export class FormComponent implements OnInit {
     let result = this.dataSource;
     result.forEach(element => {
       let index = element.pump - 1;
-    result[index].totallts = result[index].closing - result[index].opening - result[index].testing;
-    result[index].cost = (result[index].totallts * result[index].price).toFixed(2);
-    this.totaloils = parseFloat(result[index].cost) + this.totaloils;
+      result[index].totallts = result[index].closing - result[index].opening - result[index].testing;
+      result[index].cost = (result[index].totallts * result[index].price).toFixed(2);
+      this.totaloils = parseFloat(result[index].cost) + this.totaloils;
     });
     this.dataSource = loadashclonedeep(result);
   }
-  
+
   customperticulars() {
     this.perticulars.push({
       name: this.perticularoptons[2].name,
-      credit:this.perticularoptons[2].balance,
+      credit: this.perticularoptons[2].balance,
       debit: 0,
-      id : 2,
+      id: 2,
       disable: true
     })
     this.perticulars.push({
       name: this.perticularoptons[0].name,
-      credit:this.totalengineoils,
+      credit: this.totalengineoils,
       debit: 0,
-      id : 0,
+      id: 0,
       disable: true
     }),
-    this.perticulars.push({
-      name: this.perticularoptons[1].name,
-      credit:this.totaloils,
-      debit: 0,
-      id : 1,
-      disable: true
-    })
+      this.perticulars.push({
+        name: this.perticularoptons[1].name,
+        credit: this.totaloils,
+        debit: 0,
+        id: 1,
+        disable: true
+      })
     this.perticularchage();
   }
-  engineoilselected(event:any,index : any) {
+  engineoilselected(event: any, index: any) {
     this.engineoils[index].name = event.value.name;
     this.engineoils[index].qty = 0;
     this.engineoils[index].price = 0;
     this.engineoils[index].id = event.id;
   }
   addengineoils() {
-    for(let i =0 ;i< this.page;i++) {
-    this.engineoils.push({
-      name: null,
-      qty:0,
-      price: 0
-    })
+    for (let i = 0; i < this.page; i++) {
+      this.engineoils.push({
+        name: null,
+        qty: 0,
+        price: 0
+      })
+    }
   }
-  }
-  removeengineoil(index:any) {
-    this.engineoils.splice(index,1);
+  removeengineoil(index: any) {
+    this.engineoils.splice(index, 1);
     this.engineoils = this.engineoils;
     this.engineoilpricechange();
   }
-  perticularsselected(event:any,index : any) {
+  perticularsselected(event: any, index: any) {
     this.perticulars[index].name = event.value.name;
     this.perticulars[index].credit = 0;
     this.perticulars[index].debit = 0;
     this.perticulars[index].id = null;
   }
   addperticulars() {
-    for(let i =0 ;i< this.page;i++) {
+    for (let i = 0; i < this.page; i++) {
       this.perticulars.push({
         name: null,
-        credit:0,
+        credit: 0,
         debit: 0,
         disable: false,
         id: null
       })
     }
   }
-  removeperticular(index:any) {
-    this.perticulars.splice(index,1);
+  removeperticular(index: any) {
+    this.perticulars.splice(index, 1);
     this.perticulars = this.perticulars;
     this.perticularchage()
   }
 
   // submit things
   confirmsubmission() {
-    if(confirm("Are u sure u want to submit")) {
+    if (confirm("Are u sure u want to submit")) {
       this.finalsubmit();
     }
   }
   finalsubmit() {
     // readings write 
-    let readingswritdata: { 'pump': any; 'closing': any; 'type': any; 'price': any; }[]=[];
-    debugger
-    this.dataSource.forEach((element:any) => {
-      readingswritdata.push({
-        'pump':element.pump,
-        'closing':element.closing,
-        'type':element.type,
-        'price':element.price});
+    let readingswritdata: any = [];
+    this.dataSource.forEach((element: any) => {
+      readingswritdata.push([element.pump, element.closing, element.type, element.price]);
     });
-   
-    console.log(readingswritdata);
-    /*
+    let csvContent = readingswritdata.map((row: any) => row.join(',')).join('\n');
+    this.formservice.updatefiles(this.fileids['readings'], csvContent).subscribe(res => {
+      console.log("hi")
+    })
     //engineoils write
-      // need to reduce qty
-      this.engineoils.forEach((element:any) => {
-        this.engineoilsoptions[element.id].qty = this.engineoilsoptions[element.id].qty - element.qty;
-      });
-      let enginwoilsswritdata: any[][] = [];
-      this.perticularoptons.forEach((element:any,index :any) => {
-        enginwoilsswritdata.push([element.name,element.qty,index]);
-      });
-      //perticulars write
-        // need to change balance
-        this.perticulars.forEach((element:any,index : number) => {
-          this.perticularoptons[element.id] = element.balance + element.debit - element.credit;
-        });
-        // for cash only
-        this.perticularoptons[3].balance = this.leftovercash;
-        let perticularswritdata: any[][] = [];
-        this.perticularoptons.forEach((element:any,index :any) => {
-          perticularswritdata.push([element.name,element.balance]);
-        });
-        //form day sheet
-        let daysheet: any[][] = [];
-        this.perticularoptons.forEach((element:any,index :any) => {
-          daysheet.push([element.name,element.credit,element.debit]);
-        });
-        */
+    // need to reduce qty
+    this.engineoils.forEach((element: any) => {
+      this.engineoilsoptions[element.id].qty = this.engineoilsoptions[element.id].qty - element.qty;
+    });
+    let enginwoilsswritdata: any[][] = [];
+    this.engineoilsoptions.forEach((element: any, index: any) => {
+      enginwoilsswritdata.push([element.name, element.qty, index]);
+    });
+    csvContent = enginwoilsswritdata.map((row: any) => row.join(',')).join('\n');
+    this.formservice.updatefiles(this.fileids['engineoils'], csvContent).subscribe(res => {
+      console.log("hi")
+    })
+    //perticulars write
+    //form day sheet
+    let daysheet: any[][] = [];
+    this.perticulars.forEach((element: any, index: any) => {
+      daysheet.push([element.name, element.credit, element.debit]);
+    });
+    daysheet.push(['', this.leftovercash, '']);
+    csvContent = daysheet.map((row: any) => row.join(',')).join('\n');
+    const file = new File([csvContent], 'data.csv,');
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayString = this.datePipe.transform(yesterday, 'yyyy-MM-dd') + '.csv';
+    this.formservice.createfile(file).subscribe((res: any) => {
+      this.formservice.updatename(res.id, { name: yesterdayString, Type: 'Comma-separated values' }).subscribe((res: any) => { })
+    })
+
+    // need to change balance
+    this.perticulars.forEach((element: any, index: number) => {
+      this.perticularoptons[element.id] = element.balance + element.debit - element.credit;
+    });
+    // for cash only
+    this.perticularoptons[3].balance = this.leftovercash;
+
+    let perticularswritdata: any[][] = [];
+    this.perticularoptons.forEach((element: any, index: any) => {
+      perticularswritdata.push([element.name, element.balance]);
+    });
+    csvContent = perticularswritdata.map((row: any) => row.join(',')).join('\n');
+    this.formservice.updatefiles(this.fileids['perticulars'], csvContent).subscribe(res => {
+      console.log("hi")
+    })
   }
 }

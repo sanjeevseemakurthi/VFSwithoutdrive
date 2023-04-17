@@ -36,6 +36,7 @@ export class FormComponent implements OnInit {
   daysheetdate = new Date();
   fileids: any = {};
   ngOnInit(): void {
+    this.daysheetdate.setDate(this.daysheetdate.getDate() - 1);
     this.formservice.getAllfiles().subscribe((res: any) => {
       res.files.forEach((res: any) => {
         let name = res.name.split('.')[0];
@@ -272,10 +273,8 @@ export class FormComponent implements OnInit {
     daysheet.push(['', this.leftovercash, '']);
     csvContent = daysheet.map((row: any) => row.join(',')).join('\n');
     const file = new File([csvContent], 'data.csv,');
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
     const yesterdayString =
-      this.datePipe.transform(yesterday, 'yyyy-MM-dd') + '.csv';
+      this.datePipe.transform(this.daysheetdate, 'yyyy-MM-dd') + '.csv';
     this.formservice.createfile(file).subscribe((res: any) => {
       this.formservice
         .updatename(res.id, {

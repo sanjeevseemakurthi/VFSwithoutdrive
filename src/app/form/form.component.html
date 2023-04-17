@@ -56,7 +56,7 @@
                         </div>
 
                     </div>
-                    <ng-container *ngFor="let eachoil of engineoils;index as i">
+                    <ng-container *ngFor="let eachoil of engineoils;index as i" style="overflow: scroll;">
                         <div class="row perticularrow">
                             <div class="col enginerow">
                                 <div>
@@ -120,6 +120,7 @@
                         </div>
 
                     </div>
+                    <div style="overflow-y: auto;">
                     <ng-container *ngFor="let account of perticulars;index as i">
                         <div class="row perticularrow">
                             <div class="col enginerow">
@@ -148,6 +149,7 @@
                             </div>
                         </div>
                     </ng-container>
+                </div>
                     <div class="row">
                     </div>
                     <div class="row" style="padding: 10px;">

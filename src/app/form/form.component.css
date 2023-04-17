@@ -45,6 +45,9 @@
     background-size: cover;
     background-repeat: no-repeat;
     padding: 20px;
+    background-color: whitesmoke;
+    margin-bottom: 10px;
+    overflow: auto;
 }
 .mat-tab-label .mat-tab-label-content {
     opacity: 1 !important;

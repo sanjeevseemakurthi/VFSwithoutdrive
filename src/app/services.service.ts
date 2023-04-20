@@ -59,6 +59,7 @@ function oauthSignIn(): void {
   const params: Record<string, string> = {
     client_id: "690642125705-caa0a1fncrf17apvt20mg545u9dmr6hq.apps.googleusercontent.com",
     redirect_uri: "http://localhost:4200",
+    // redirect_uri: "https://vinayakafiliing.web.app",
     response_type: "token",
     scope: "https://www.googleapis.com/auth/drive",
     include_granted_scopes: "true",

@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class ServicesService {
+  holdcreatedata: any;
 
   constructor(public http: HttpClient) { }
   authenricate() {
@@ -45,6 +46,19 @@ export class ServicesService {
       'Content-Type': '.csv'
     }
     return this.http.patch("https://www.googleapis.com/drive/v3/files/" + fileid, data, { headers: head })
+  }
+  savefileindrive(arradydata: any, name: any) {
+    let csvContent = arradydata
+      .map((row: any) => row.join(','))
+      .join('\n');
+    this.createfile(csvContent)
+      .subscribe((res: any) => {
+        this.updatename(res.id, {
+          name: name,
+          Type: 'Comma-separated values',
+        })
+          .subscribe((res: any) => { });
+      });
   }
 }
 

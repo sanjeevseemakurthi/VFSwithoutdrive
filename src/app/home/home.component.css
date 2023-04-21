@@ -1,0 +1,14 @@
+.Bgimage {
+    width: 100%;
+    height: 100%;
+    background-image: url("../../assets/portfolio-2.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    padding: 20px;
+    background-color: whitesmoke;
+    margin-bottom: 10px;
+    overflow: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

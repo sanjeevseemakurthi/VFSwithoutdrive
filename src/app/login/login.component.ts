@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
       const accessToken = urlParams.get('access_token');
       if (accessToken) {
         localStorage.setItem('token', accessToken);
-        route.navigateByUrl('index')
+        route.navigateByUrl('home')
       }
       console.log(accessToken); // Print the parameter to the console. 
 
@@ -24,6 +24,9 @@ export class LoginComponent implements OnInit {
   }
   auth() {
     this.service.authenricate();
+  }
+  create() {
+    this.route.navigateByUrl('newuser')
   }
   ngOnInit(): void {
 

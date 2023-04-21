@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatTableModule } from '@angular/material/table';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FormComponent } from './form/form.component';
@@ -12,13 +12,18 @@ import { MatTabsModule } from '@angular/material/tabs';
 import AlertModule from 'ngx-bootstrap';
 import { LoginComponent } from './login/login.component';
 import { DatePipe } from '@angular/common';
+import { RequestInterceptor } from './request.interceptor';
+import { CreatenewuserComponent } from './createnewuser/createnewuser.component';
+import { HomeComponent } from './home/home.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     FormComponent,
-    LoginComponent
+    LoginComponent,
+    CreatenewuserComponent,
+    HomeComponent
   ],
   imports: [
     FormsModule,
@@ -30,7 +35,7 @@ import { DatePipe } from '@angular/common';
     MatSelectModule,
     MatTabsModule
   ],
-  providers: [DatePipe],
+  providers: [DatePipe, { provide: HTTP_INTERCEPTORS, useClass: RequestInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

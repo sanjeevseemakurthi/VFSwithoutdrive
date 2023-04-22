@@ -60,6 +60,15 @@ export class ServicesService {
           .subscribe((res: any) => { });
       });
   }
+  refreshtoken() {
+    let data = {
+      'client_id': "690642125705-caa0a1fncrf17apvt20mg545u9dmr6hq.apps.googleusercontent.com",
+      'client_secret': "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",
+      'refresh_token': localStorage.getItem('token'),
+      'grant_type': 'refresh_token'
+    }
+    return this.http.post('https://oauth2.googleapis.com/token', data)
+  }
 }
 
 // js code authenticate

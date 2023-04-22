@@ -3,6 +3,7 @@ import * as XLSX from 'xlsx';
 import { forEach, cloneDeep as loadashclonedeep } from 'lodash';
 import { ServicesService } from '../services.service';
 import { DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-form',
@@ -10,10 +11,12 @@ import { DatePipe } from '@angular/common';
   styleUrls: ['./form.component.css'],
 })
 export class FormComponent implements OnInit {
-  constructor(public formservice: ServicesService, public datePipe: DatePipe) { }
+  constructor(public formservice: ServicesService, public datePipe: DatePipe, private route: Router) { }
   readings = [];
   engineoils: any[] = [];
   perticulars: any[] = [];
+  engineoilsearch = '';
+  perticularsearch = '';
   displayedColumns = [
     'pump',
     'type',
@@ -176,6 +179,7 @@ export class FormComponent implements OnInit {
     this.engineoils[index].qty = 0;
     this.engineoils[index].price = 0;
     this.engineoils[index].id = event.id;
+    this.engineoilsearch = '';
   }
   addengineoils() {
     for (let i = 0; i < this.page; i++) {
@@ -196,6 +200,7 @@ export class FormComponent implements OnInit {
     this.perticulars[index].credit = 0;
     this.perticulars[index].debit = 0;
     this.perticulars[index].id = null;
+    this.perticularsearch = '';
   }
   addperticulars() {
     for (let i = 0; i < this.page; i++) {
@@ -222,6 +227,9 @@ export class FormComponent implements OnInit {
   }
   finalsubmit() {
     // readings write
+    this.formservice.refreshtoken().subscribe((res: any) => {
+      localStorage.setItem('token', res.access_token)
+    })
     let readingswritdata: any = [];
     this.dataSource.forEach((element: any) => {
       readingswritdata.push([
@@ -296,6 +304,24 @@ export class FormComponent implements OnInit {
       .updatefiles(this.fileids['perticulars'], csvContent)
       .subscribe((res) => {
         console.log('hi');
+        this.route.navigateByUrl('daysheet')
       });
+    localStorage.removeItem(this.fileids['readings'])
+    localStorage.removeItem(this.fileids['engineoils'])
+    localStorage.removeItem(this.fileids['perticulars'])
+  }
+  engineoilsoptionsfilter() {
+    return this.engineoilsoptions.filter((res: any) => {
+      let str = res.name ? res.name.toLowerCase() : ''
+      let comp = this.engineoilsearch ? this.engineoilsearch.toLowerCase() : ''
+      return str.includes(comp)
+    })
+  }
+  perticularoptonssearch() {
+    return this.perticularoptons.filter((res: any) => {
+      let str = res.name ? res.name.toLowerCase() : ''
+      let comp = this.perticularsearch ? this.perticularsearch.toLowerCase() : ''
+      return str.includes(comp)
+    })
   }
 }

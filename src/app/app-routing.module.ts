@@ -4,24 +4,27 @@ import { FormComponent } from './form/form.component';
 import { LoginComponent } from './login/login.component';
 import { CreatenewuserComponent } from './createnewuser/createnewuser.component';
 import { HomeComponent } from './home/home.component';
+import { AuthtokenGuard } from './authtoken.guard';
 
 const routes: Routes = [
 
   {
     path: 'index',
-    component: HomeComponent
+    component: HomeComponent,
+    canActivate: [AuthtokenGuard]
   },
   {
     path: 'newuser',
-    component: CreatenewuserComponent
+    component: CreatenewuserComponent,
   },
   {
     path: 'Daysheet',
-    component: FormComponent
+    component: FormComponent,
+    canActivate: [AuthtokenGuard]
   },
   {
-    path: '',
-    component: LoginComponent
+    path: '**',
+    component: LoginComponent,
   },
 ];
 

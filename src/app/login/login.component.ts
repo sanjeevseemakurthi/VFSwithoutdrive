@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
       const accessToken = urlParams.get('access_token');
       if (accessToken) {
         localStorage.setItem('token', accessToken);
-        route.navigateByUrl('home')
+        route.navigateByUrl('index')
       }
       console.log(accessToken); // Print the parameter to the console. 
 

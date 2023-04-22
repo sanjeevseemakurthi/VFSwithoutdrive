@@ -38,6 +38,8 @@ export class FormComponent implements OnInit {
   ngOnInit(): void {
     this.daysheetdate.setDate(this.daysheetdate.getDate() - 1);
     this.formservice.getAllfiles().subscribe((res: any) => {
+      let str = localStorage.getItem('files');
+      res = JSON.parse(str ? str : '');
       res.files.forEach((res: any) => {
         let name = res.name.split('.')[0];
         let fileid = res.id;
@@ -50,11 +52,8 @@ export class FormComponent implements OnInit {
     this.formservice
       .readingfiles(this.fileids['readings'])
       .subscribe((data) => {
-        const workbook = XLSX.read(data, { type: 'array' });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-        const excelData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-        let hold = excelData;
+        let str = localStorage.getItem(this.fileids['readings']);
+        let hold = JSON.parse(str ? str : '');
         let resultdata: any[] = [];
         hold.forEach((element: any) => {
           let row = {
@@ -73,11 +72,8 @@ export class FormComponent implements OnInit {
     this.formservice
       .readingfiles(this.fileids['engineoils'])
       .subscribe((data) => {
-        const workbook = XLSX.read(data, { type: 'array' });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-        const excelData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-        let hold = excelData;
+        let str = localStorage.getItem(this.fileids['engineoils']);
+        let hold = JSON.parse(str ? str : '');
         let resultdata: any[] = [];
         hold.forEach((element: any) => {
           let row = {
@@ -92,11 +88,8 @@ export class FormComponent implements OnInit {
     this.formservice
       .readingfiles(this.fileids['perticulars'])
       .subscribe((data) => {
-        const workbook = XLSX.read(data, { type: 'array' });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-        const excelData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-        let hold = excelData;
+        let str = localStorage.getItem(this.fileids['perticulars']);
+        let hold = JSON.parse(str ? str : '');
         let resultdata: any[] = [];
         hold.forEach((element: any, index: number) => {
           let row = {

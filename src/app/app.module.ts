@@ -15,6 +15,7 @@ import { DatePipe } from '@angular/common';
 import { RequestInterceptor } from './request.interceptor';
 import { CreatenewuserComponent } from './createnewuser/createnewuser.component';
 import { HomeComponent } from './home/home.component';
+import { ResponsecacheInterceptor } from './responsecache.interceptor';
 
 
 @NgModule({
@@ -35,7 +36,9 @@ import { HomeComponent } from './home/home.component';
     MatSelectModule,
     MatTabsModule
   ],
-  providers: [DatePipe, { provide: HTTP_INTERCEPTORS, useClass: RequestInterceptor, multi: true }],
+  providers: [DatePipe,
+    { provide: HTTP_INTERCEPTORS, useClass: RequestInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ResponsecacheInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

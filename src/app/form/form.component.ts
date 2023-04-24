@@ -78,11 +78,11 @@ export class FormComponent implements OnInit {
         let str = localStorage.getItem(this.fileids['engineoils']);
         let hold = JSON.parse(str ? str : '');
         let resultdata: any[] = [];
-        hold.forEach((element: any) => {
+        hold.forEach((element: any, index: number) => {
           let row = {
             name: element[0],
             qty: element[1],
-            id: element[2],
+            id: index,
           };
           resultdata.push(row);
         });
@@ -103,8 +103,29 @@ export class FormComponent implements OnInit {
           resultdata.push(row);
         });
         this.perticularoptons = resultdata;
-        this.customperticulars();
+        if (sessionStorage.getItem('perticulars')) {
+          let str = sessionStorage.getItem('perticulars');
+          let hold = JSON.parse(str ? str : '');
+          this.perticulars = loadashclonedeep(hold);
+          this.perticularchage();
+        } else {
+          this.customperticulars();
+        }
+
       });
+    if (sessionStorage.getItem('readings')) {
+      let str = sessionStorage.getItem('readings');
+      let hold = JSON.parse(str ? str : '');
+      this.dataSource = loadashclonedeep(hold);
+      this.initialcaluclatins();
+    }
+    if (sessionStorage.getItem('engineoils')) {
+      let str = sessionStorage.getItem('engineoils');
+      let hold = JSON.parse(str ? str : '');
+      this.engineoils = loadashclonedeep(hold);
+      this.engineoilpricechange();
+    }
+
   }
   // for readings row change
   readingrowchanged(element: any) {
@@ -137,6 +158,7 @@ export class FormComponent implements OnInit {
     this.leftovercash = this.credit - this.debit;
   }
   initialcaluclatins() {
+    this.totaloils = 0;
     let result = this.dataSource;
     result.forEach((element) => {
       let index = element.pump - 1;
@@ -148,6 +170,7 @@ export class FormComponent implements OnInit {
       this.totaloils = parseFloat(result[index].cost) + this.totaloils;
     });
     this.dataSource = loadashclonedeep(result);
+    this.totaloils = loadashclonedeep(this.totaloils);
   }
 
   customperticulars() {
@@ -178,7 +201,7 @@ export class FormComponent implements OnInit {
     this.engineoils[index].name = event.value.name;
     this.engineoils[index].qty = 0;
     this.engineoils[index].price = 0;
-    this.engineoils[index].id = event.id;
+    this.engineoils[index].id = event.value;
     this.engineoilsearch = '';
   }
   addengineoils() {
@@ -199,8 +222,12 @@ export class FormComponent implements OnInit {
     this.perticulars[index].name = event.value.name;
     this.perticulars[index].credit = 0;
     this.perticulars[index].debit = 0;
-    this.perticulars[index].id = null;
+    this.perticulars[index].id = event.value;
     this.perticularsearch = '';
+  }
+  clearall() {
+    sessionStorage.clear();
+    this.route.navigateByUrl("index")
   }
   addperticulars() {
     for (let i = 0; i < this.page; i++) {
@@ -225,8 +252,14 @@ export class FormComponent implements OnInit {
       this.finalsubmit();
     }
   }
+  saveasdraft() {
+    sessionStorage.setItem('readings', JSON.stringify(this.dataSource));
+    sessionStorage.setItem('engineoils', JSON.stringify(this.engineoils));
+    sessionStorage.setItem('perticulars', JSON.stringify(this.perticulars));
+  }
   finalsubmit() {
     // readings write
+    this.saveasdraft()
     this.formservice.refreshtoken().subscribe((res: any) => {
       localStorage.setItem('token', res.access_token)
     })
@@ -282,7 +315,14 @@ export class FormComponent implements OnInit {
           name: yesterdayString,
           Type: 'Comma-separated values',
         })
-        .subscribe((res: any) => { });
+        .subscribe((res: any) => {
+          setTimeout(() => {
+            sessionStorage.clear();
+            localStorage.removeItem(this.fileids['readings'])
+            localStorage.removeItem(this.fileids['engineoils'])
+            localStorage.removeItem(this.fileids['perticulars'])
+          }, 100);
+        });
     });
 
     // need to change balance
@@ -304,11 +344,8 @@ export class FormComponent implements OnInit {
       .updatefiles(this.fileids['perticulars'], csvContent)
       .subscribe((res) => {
         console.log('hi');
-        this.route.navigateByUrl('daysheet')
+        this.route.navigateByUrl('index')
       });
-    localStorage.removeItem(this.fileids['readings'])
-    localStorage.removeItem(this.fileids['engineoils'])
-    localStorage.removeItem(this.fileids['perticulars'])
   }
   engineoilsoptionsfilter() {
     return this.engineoilsoptions.filter((res: any) => {

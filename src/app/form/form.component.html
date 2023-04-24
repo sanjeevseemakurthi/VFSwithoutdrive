@@ -1,6 +1,6 @@
 <div class="Bgimage">
     <input type="date" [(ngModel)]="daysheetdate">
-    <mat-tab-group animationDuration="0ms">
+    <mat-tab-group animationDuration="0ms" (selectedTabChange) = "saveasdraft()">
         <mat-tab>
             <ng-template mat-tab-label>
                 <div style="color: white; opacity: 1;">Readings</div>
@@ -64,13 +64,16 @@
                                         <mat-label>
                                             <p style="color: white;">Select Engineoil</p>
                                         </mat-label>
-                                        <mat-select (selectionChange)="engineoilselected($event,i)">
+                                        <mat-select (selectionChange)="engineoilselected($event,i)" [(value)]="eachoil.id">
                                             <input type="text" [(ngModel)]="engineoilsearch" placeholder="search">
-                                            <mat-option *ngFor="let oil of engineoilsoptionsfilter()" [value]="oil">
+                                            <mat-option *ngFor="let oil of engineoilsoptionsfilter()" [value]="oil.id">
                                                 {{oil.name}}
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
+                                </div>
+                                <div class="lowsize">
+                                    {{engineoilsoptions[eachoil.id]?.qty | json}}
                                 </div>
                                 <div class="lowsize">
                                     <input type="number" [(ngModel)]="eachoil.qty" class="lowsize">
@@ -179,6 +182,7 @@
             </div>
             <div style="display: flex;justify-content: space-around; margin: 10px; padding: 10px;">
                 <a style="right: 0px;" class="btn btn-primary btn-xl" (click)="confirmsubmission()">Submit</a>
+                <a style="right: 0px;" class="btn btn-primary btn-xl" (click)="clearall()">Clear</a>
             </div>
         </mat-tab>
     </mat-tab-group>

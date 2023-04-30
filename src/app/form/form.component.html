@@ -1,5 +1,8 @@
 <div class="Bgimage">
-    <input type="date" [(ngModel)]="daysheetdate">
+   <div style="width: 100%;display: flex;justify-content: space-between;align-items: center;">
+    <input type="date" [(ngModel)]="daysheetdate" id="datepicker">
+    <button type="button" class="btn btn-warning" (click) = "goback()">Back</button>
+   </div>
     <mat-tab-group animationDuration="0ms" (selectedTabChange) = "saveasdraft()">
         <mat-tab>
             <ng-template mat-tab-label>
@@ -129,7 +132,7 @@
                         </div>
 
                     </div>
-                    <div style="overflow-y: auto;">
+                    <div>
                     <ng-container *ngFor="let account of perticulars;index as i">
                         <div class="row perticularrow">
                             <div class="col enginerow">

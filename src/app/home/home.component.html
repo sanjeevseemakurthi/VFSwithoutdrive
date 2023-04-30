@@ -1,10 +1,12 @@
 <div class="Bgimage">
-    <button type="submit" (click)="balance()">modify or check balnce</button>
-    <button type="submit" (click)="engineoils()">modify or check engine oils</button>
-    <button type="submit" (click)="daysheet()">click for day sheet</button>
+    <div style="padding:5px">
+        <button type="button" class="btn btn-primary m-2"(click)="balance()">ADD or check balnce</button>
+        <button type="button" class="btn btn-primary m-2"(click)="engineoils()">ADD or check engine oils</button>
+        <button type="button" class="btn btn-primary m-2"(click)="daysheet()">click for day sheet</button>
+    </div>
     <div class="popover" *ngIf="display">
         <div class="justsupport">
-            <input type="text" [(ngModel)]="searchselected">
+            <input type="text" [(ngModel)]="searchselected" placeholder="search here">
             <div *ngFor="let item of selected">
                 <div class="subpoopover" *ngIf="selectedincludecheck(item['name'])">
                     <div  *ngFor="let col of colselected" >
@@ -16,9 +18,9 @@
             </div>
         </div> 
         <div>
-            <button type="submit" (click) = "submit()">submit</button>
-            <button type="submit" (click) = "close()">Close </button>
-            <button type="submit" (click) = "newrecord()">New Record</button>
+            <button type="button" class="btn btn-dark m-2" (click) = "submit()">submit</button>
+            <button type="button" class="btn btn-dark m-2" (click) = "close()">Close </button>
+            <button type="button" class="btn btn-dark m-2" (click) = "newrecord()">New Record</button>
         </div> 
     </div>
 </div>

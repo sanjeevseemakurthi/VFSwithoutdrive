@@ -36,10 +36,11 @@ export class FormComponent implements OnInit {
   credit = 0.0;
   debit = 0.0;
   page = 1;
-  daysheetdate = new Date();
+  daysheetdate: any = new Date();
   fileids: any = {};
   ngOnInit(): void {
     this.daysheetdate.setDate(this.daysheetdate.getDate() - 1);
+    this.daysheetdate = this.datePipe.transform(this.daysheetdate, 'yyyy-MM-dd')
     this.formservice.getAllfiles().subscribe((res: any) => {
       let str = localStorage.getItem('files');
       res = JSON.parse(str ? str : '');
@@ -364,5 +365,8 @@ export class FormComponent implements OnInit {
   }
   focusonsearchengine() {
     document.getElementById("engineoilid")?.focus()
+  }
+  goback() {
+    this.route.navigateByUrl("index")
   }
 }

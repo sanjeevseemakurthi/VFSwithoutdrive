@@ -9,9 +9,6 @@
    outline: none;
    width: 65px;
 }
-.lowsize {
-    width: 80px;
-}
 .buttonBg {
     border: none;
     background-color: transparent;
@@ -22,7 +19,11 @@
     align-items: center;
 }
 .headercol{
-    width: 250px;
+    display: flex;
+    justify-content: space-around;
+}
+.eachcol{
+    width: fit-content
 }
 .mat-form-field-appearance-fill .mat-form-field-flex {
     background-color: rgba(0,0,0,0) !important;
@@ -37,6 +38,7 @@
 }
 .perticularrow {
     border-bottom: 1px solid black;
+
 }
 .Bgimage {
     width: 100%;
@@ -66,4 +68,7 @@
 .totaloildisp {
     color: rgb(175, 20, 20);
     padding: 10px;
+}
+.emptydiv{
+    width: 10px;
 }

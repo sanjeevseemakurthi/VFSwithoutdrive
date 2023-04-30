@@ -63,7 +63,7 @@ export class FormComponent implements OnInit {
           let row = {
             pump: element[0],
             opening: element[1],
-            closing: element[1],
+            closing: '',
             type: element[2],
             price: element[3],
             testing: 5,
@@ -129,7 +129,7 @@ export class FormComponent implements OnInit {
 
   }
   // for readings row change
-  readingrowchanged(element: any) {
+  readingrowchanged(element: any, item: string, row: number) {
     let result = this.dataSource;
     let index = element.pump - 1;
     this.totaloils = this.totaloils - parseFloat(result[index].cost);
@@ -139,14 +139,17 @@ export class FormComponent implements OnInit {
       2
     );
     this.totaloils = this.totaloils + parseFloat(result[index].cost);
-    this.perticulars[2].credit = this.totaloils;
+    this.perticulars[2].credit = parseFloat(this.totaloils.toFixed(2));
+    document.getElementById(item + (row + 1))?.focus();
   }
   engineoilpricechange() {
     this.totalengineoils = 0;
     this.engineoils.forEach((element) => {
       this.totalengineoils = this.totalengineoils + element.price;
     });
-    this.perticulars[1].credit = this.totalengineoils;
+    if (this.perticulars[1]) {
+      this.perticulars[1].credit = parseFloat(this.totalengineoils.toFixed(2));
+    }
   }
   perticularchage() {
     this.credit = 0;
@@ -261,6 +264,7 @@ export class FormComponent implements OnInit {
     sessionStorage.setItem('engineoils', JSON.stringify(this.engineoils));
     sessionStorage.setItem('perticulars', JSON.stringify(this.perticulars));
     this.perticularchage();
+    this.initialcaluclatins();
   }
   finalsubmit() {
     // readings write

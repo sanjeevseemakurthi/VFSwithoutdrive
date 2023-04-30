@@ -29,7 +29,7 @@
                                 <td mat-cell *matCellDef="let element, let i =index" class="cell_head">
                                     <input type="number" [(ngModel)]="element[item]"
                                         (change)="readingrowchanged(element,item,i)"
-                                        [ngClass]="{ readingsinput: item !== 'closing' }" [id] = "item + i" />
+                                        [ngClass]="{ readingsinput: item !== 'closing' }" [id]="item + i" />
                                 </td>
                             </ng-container>
                         </ng-container>
@@ -59,15 +59,21 @@
             <div>
                 <div class="col-11 Matbg">
                     <div class="row perticularrow headercol" style="padding: 10px">
-                        <div class="eachcol">Engine Oil</div>
-                        <div class="eachcol">QTY Left</div>
-                        <div class="eachcol">QTY</div>
-                        <div class="eachcol">price</div>
-                        <div class="eachcol">Action</div>
+                        <div class="col-sm-4 headercol">
+                            <div class="eachcol">Engine Oil</div>
+                        </div>
+                        <div class="col-sm-4 headercol">
+                            <div class="eachcol">QTY Left</div>
+                            <div class="eachcol">QTY</div>
+                        </div>
+                        <div class="col-sm-4 headercol">
+                            <div class="eachcol">price</div>
+                            <div class="eachcol">Action</div>
+                        </div>
                     </div>
                     <ng-container *ngFor="let eachoil of engineoils; index as i" style="overflow: scroll">
                         <div class="row perticularrow">
-                            <div class="col enginerow">
+                            <div class="col-sm-4 headercol">
                                 <div>
                                     <mat-form-field appearance="fill">
                                         <mat-label>
@@ -87,17 +93,21 @@
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
-                                <div >
+                            </div>
+                            <div class="col-sm-4 headercol">
+                                <div>
                                     {{ engineoilsoptions[eachoil.id]?.qty | json }}
                                 </div>
-                                <div >
-                                    <input type="number" [(ngModel)]="eachoil.qty"  />
+                                <div>
+                                    <input type="number" [(ngModel)]="eachoil.qty" />
                                 </div>
-                                <div >
-                                    <input type="number" [(ngModel)]="eachoil.price" 
+                            </div>
+                            <div class="col-sm-4 headercol">
+                                <div>
+                                    <input type="number" [(ngModel)]="eachoil.price"
                                         (change)="engineoilpricechange()" />
                                 </div>
-                                <div >
+                                <div>
                                     <button style="color: red" (click)="removeengineoil(i)" class="buttonBg">
                                         X
                                     </button>
@@ -125,62 +135,75 @@
             </ng-template>
             <div>
                 <div class="col-11 Matbg">
-               
-                    <div class="perticularrow headercol" style="padding: 10px">
-                        <div class="eachcol">Accounts</div>
-                        <div class="eachcol">Credit</div>
-                        <div class="eachcol">Debit</div>
-                        <div class="eachcol">Action</div>
+                    <div class="row perticularrow headercol " style="padding: 10px">
+                        <div class="col-sm-4 headercol">
+                            <div class="eachcol">Accounts</div>
+                        </div>
+                        <div class="col-sm-4 headercol">
+                            <div class="eachcol">Credit</div>
+                            <div class="eachcol">Debit</div>
+                        </div>
+                        <div class="col-sm-4 headercol">
+                            <div class="eachcol">Action</div>
+                        </div>
+                        
+
                     </div>
-                    <div>
-                        <ng-container *ngFor="let account of perticulars; index as i">
-                            <div class="perticularrow">
-                                <div class="enginerow">
-                                    <div>
-                                        <mat-form-field appearance="fill">
-                                            <mat-select (selectionChange)="perticularsselected($event, i)"
-                                                [(value)]="account.id" [disabled]="account.disable"
-                                                (openedChange)="focusonsearch()">
-                                                <input type="text" [(ngModel)]="perticularsearch" placeholder="search"
-                                                    id="perticularid" />
-                                                <ng-container *ngFor="let acc of perticularoptons">
-                                                    <ng-container *ngIf="perticularoptonssearch(acc.name)">
-                                                        <mat-option [value]="acc.id">
-                                                            {{ acc.name }}
-                                                        </mat-option>
-                                                    </ng-container>
+                    <ng-container *ngFor="let account of perticulars; index as i">
+                        <div class="row perticularrow headercol">
+                            <div class="col-sm-4 headercol">
+                                <div>
+                                    <mat-form-field appearance="fill">
+                                        <mat-select (selectionChange)="perticularsselected($event, i)"
+                                            [(value)]="account.id" [disabled]="account.disable"
+                                            (openedChange)="focusonsearch()">
+                                            <input type="text" [(ngModel)]="perticularsearch" placeholder="search"
+                                                id="perticularid" />
+                                            <ng-container *ngFor="let acc of perticularoptons">
+                                                <ng-container *ngIf="perticularoptonssearch(acc.name)">
+                                                    <mat-option [value]="acc.id">
+                                                        {{ acc.name }}
+                                                    </mat-option>
                                                 </ng-container>
-                                            </mat-select>
-                                        </mat-form-field>
-                                    </div>
-                                    <div >
-                                        <input type="number" [(ngModel)]="account.credit" 
-                                            (change)="perticularchage()" [disabled]="account.disable" />
-                                    </div>
-                                    <div >
-                                        <input type="number" [(ngModel)]="account.debit" 
-                                            (change)="perticularchage()" [disabled]="account.disable" />
-                                    </div>
-                                    <div >
-                                        <button style="color: red" (click)="removeperticular(i)" class="buttonBg"
-                                            [disabled]="account.disable">
-                                            X
-                                        </button>
-                                    </div>
+                                            </ng-container>
+                                        </mat-select>
+                                    </mat-form-field>
                                 </div>
                             </div>
-                        </ng-container>
-                    </div>
+                            <div class="col-sm-4 headercol">
+                                <div>
+                                    <input type="number" [(ngModel)]="account.credit" (change)="perticularchage()"
+                                        [disabled]="account.disable" />
+                                </div>
+                                <div>
+                                    <input type="number" [(ngModel)]="account.debit" (change)="perticularchage()"
+                                        [disabled]="account.disable" />
+                                </div>
+                            </div>
+                            <div class="col-sm-4 headercol">
+                                <div>
+                                    <button style="color: red" (click)="removeperticular(i)" class="buttonBg"
+                                        [disabled]="account.disable">
+                                        X
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
                     <div class="headercol" style="padding: 10px">
-                        <div class=" totaloildisp">Total : {{ leftovercash }}</div>
-                        <div >
-                            {{ credit }}
+                        <div class="col-sm-6 headercol">
+                            <div class="emptydiv">
+
+                            </div>
+                            <div class=" totaloildisp">Total : {{ leftovercash }}</div>
                         </div>
-                        <div>
-                            {{ debit }}
-                        </div>
-                        <div class="emptydiv">
-                           
+                        <div class="col-sm-6 headercol">
+                            <div>
+                                {{ credit }}
+                            </div>
+                            <div>
+                                {{ debit }}
+                            </div>
                         </div>
                     </div>
                     <div class="addbutton">

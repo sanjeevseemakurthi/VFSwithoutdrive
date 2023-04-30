@@ -64,11 +64,16 @@
                                         <mat-label>
                                             <p style="color: white;">Select Engineoil</p>
                                         </mat-label>
-                                        <mat-select (selectionChange)="engineoilselected($event,i)" [(value)]="eachoil.id">
-                                            <input type="text" [(ngModel)]="engineoilsearch" placeholder="search">
-                                            <mat-option *ngFor="let oil of engineoilsoptionsfilter()" [value]="oil.id">
-                                                {{oil.name}}
-                                            </mat-option>
+                                        <mat-select (selectionChange)="engineoilselected($event,i)" [(value)]="eachoil.id" (openedChange) = "focusonsearchengine()">
+                                            <input type="text" [(ngModel)]="engineoilsearch" placeholder="search" id="engineoilid">
+                                            <ng-container *ngFor="let oil of engineoilsoptions">
+                                                <ng-container  *ngIf="engineoilsoptionsfilter(oil.name)">
+                                                    <mat-option  [value]="oil.id">
+                                                          {{oil.name}}
+                                                      </mat-option>
+                                                </ng-container>
+                                            </ng-container>
+                                           
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
@@ -131,11 +136,15 @@
                                 <div>
                                     <mat-form-field appearance="fill">
                                         <mat-select (selectionChange)="perticularsselected($event,i)"
-                                            [(value)]="account.id" [disabled]="account.disable">
-                                            <input type="text" [(ngModel)]="perticularsearch" placeholder="search">
-                                            <mat-option *ngFor="let acc of perticularoptonssearch()" [value]="acc.id">
-                                                {{acc.name}}
-                                            </mat-option>
+                                            [(value)]="account.id" [disabled]="account.disable" (openedChange) = "focusonsearch()">
+                                            <input type="text" [(ngModel)]="perticularsearch" placeholder="search" id="perticularid">
+                                            <ng-container *ngFor="let acc of perticularoptons" >
+                                                <ng-container *ngIf="perticularoptonssearch(acc.name)">
+                                                    <mat-option  [value]="acc.id">
+                                                        {{acc.name}}
+                                                    </mat-option>
+                                                </ng-container>
+                                            </ng-container>
                                         </mat-select>
                                     </mat-form-field>
                                 </div>

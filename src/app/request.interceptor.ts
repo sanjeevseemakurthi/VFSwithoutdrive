@@ -14,12 +14,12 @@ export class RequestInterceptor implements HttpInterceptor {
   constructor() { }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    if (request.url.includes('files/') && !request.url.includes('upload/')) {
+    if (request.url.includes('files/') && !request.url.includes('upload/') && request.url.includes('?alt=media')) {
       let keyname = request.url.split('files/')[1].replace('?alt=media', '')
       if (localStorage.getItem(keyname)) {
         return of(new HttpResponse({ body: new ArrayBuffer(8) }));
       }
-    } else if (request.url.includes('files') && !request.url.includes('upload/')) {
+    } else if (request.url.endsWith('files') && !request.url.includes('upload/')) {
       if (localStorage.getItem('files')) {
         return of(new HttpResponse({ body: [] }));
       }

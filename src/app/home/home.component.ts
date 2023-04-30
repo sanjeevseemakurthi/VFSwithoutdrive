@@ -127,4 +127,7 @@ export class HomeComponent implements OnInit {
   close() {
     this.display = false;
   }
+  selectedincludecheck(str: any) {
+    return (str.toLowerCase()).includes(this.searchselected.toLowerCase())
+  }
 }

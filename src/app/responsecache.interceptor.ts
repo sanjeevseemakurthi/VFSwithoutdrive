@@ -20,7 +20,7 @@ export class ResponsecacheInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       tap((event) => {
         if (event.type === HttpEventType.Response) {
-          if (request.url.includes('files/') && !request.url.includes('upload/')) {
+          if (request.url.includes('files/') && !request.url.includes('upload/') && request.url.includes('?alt=media')) {
             let keyname = request.url.split('files/')[1].replace('?alt=media', '')
             if (!localStorage.getItem(keyname)) {
               const workbook = XLSX.read(event.body, { type: 'array' });
@@ -29,7 +29,7 @@ export class ResponsecacheInterceptor implements HttpInterceptor {
               const excelData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
               localStorage.setItem(keyname, JSON.stringify(excelData))
             }
-          } else if (request.url.includes('files') && !request.url.includes('upload/')) {
+          } else if (request.url.endsWith('files') && !request.url.includes('upload/')) {
             localStorage.setItem('files', JSON.stringify(event.body))
           }
         }

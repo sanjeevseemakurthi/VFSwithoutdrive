@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
@@ -80,9 +81,8 @@ function oauthSignIn(): void {
   form.action = oauth2Endpoint;
 
   const params: Record<string, string> = {
-    client_id: "690642125705-caa0a1fncrf17apvt20mg545u9dmr6hq.apps.googleusercontent.com",
-    // redirect_uri: "http://localhost:4200",
-    redirect_uri: "https://vinayakafiliing.web.app",
+    client_id: environment.client_id,
+    redirect_uri: environment.redirect_uri,
     response_type: "token",
     scope: "https://www.googleapis.com/auth/drive",
     include_granted_scopes: "true",

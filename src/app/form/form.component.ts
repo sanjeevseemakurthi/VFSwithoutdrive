@@ -227,6 +227,9 @@ export class FormComponent implements OnInit {
   }
   clearall() {
     sessionStorage.clear();
+    localStorage.removeItem(this.fileids['readings'])
+    localStorage.removeItem(this.fileids['engineoils'])
+    localStorage.removeItem(this.fileids['perticulars'])
     this.route.navigateByUrl("index")
   }
   addperticulars() {
@@ -256,6 +259,7 @@ export class FormComponent implements OnInit {
     sessionStorage.setItem('readings', JSON.stringify(this.dataSource));
     sessionStorage.setItem('engineoils', JSON.stringify(this.engineoils));
     sessionStorage.setItem('perticulars', JSON.stringify(this.perticulars));
+    this.perticularchage();
   }
   finalsubmit() {
     // readings write
@@ -301,11 +305,18 @@ export class FormComponent implements OnInit {
     //perticulars write
     //form day sheet
     let daysheet: any[][] = [];
+    daysheet.push(["name", "credit", "debit"])
     this.perticulars.forEach((element: any, index: any) => {
-      daysheet.push([element.name, element.credit, element.debit]);
+      daysheet.push([this.perticularoptons[element.id].name, element.credit, element.debit]);
     });
-    daysheet.push(['', this.leftovercash, '']);
+    daysheet.push(['total', this.leftovercash, '']);
     csvContent = daysheet.map((row: any) => row.join(',')).join('\n');
+    // test
+    const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(daysheet)
+    const workbook: XLSX.WorkBook = {
+      Sheets: { 'data': worksheet },
+      SheetNames: ['data']
+    };
     const file = new File([csvContent], 'data.csv,');
     const yesterdayString =
       this.datePipe.transform(this.daysheetdate, 'yyyy-MM-dd') + '.csv';
@@ -316,22 +327,17 @@ export class FormComponent implements OnInit {
           Type: 'Comma-separated values',
         })
         .subscribe((res: any) => {
-          setTimeout(() => {
-            sessionStorage.clear();
-            localStorage.removeItem(this.fileids['readings'])
-            localStorage.removeItem(this.fileids['engineoils'])
-            localStorage.removeItem(this.fileids['perticulars'])
-          }, 100);
+          this.clearall();
         });
     });
 
     // need to change balance
     this.perticulars.forEach((element: any, index: number) => {
-      this.perticularoptons[element.id] =
-        element.balance + element.debit - element.credit;
+      this.perticularoptons[element.id].balance =
+        this.perticularoptons[element.id].balance + element.debit - element.credit;
     });
     // for cash only
-    this.perticularoptons[3].balance = this.leftovercash;
+    this.perticularoptons[2].balance = this.leftovercash;
 
     let perticularswritdata: any[][] = [];
     this.perticularoptons.forEach((element: any, index: any) => {
@@ -347,18 +353,16 @@ export class FormComponent implements OnInit {
         this.route.navigateByUrl('index')
       });
   }
-  engineoilsoptionsfilter() {
-    return this.engineoilsoptions.filter((res: any) => {
-      let str = res.name ? res.name.toLowerCase() : ''
-      let comp = this.engineoilsearch ? this.engineoilsearch.toLowerCase() : ''
-      return str.includes(comp)
-    })
+  engineoilsoptionsfilter(str: string) {
+    return str.toLowerCase().includes(this.engineoilsearch.toLowerCase())
   }
-  perticularoptonssearch() {
-    return this.perticularoptons.filter((res: any) => {
-      let str = res.name ? res.name.toLowerCase() : ''
-      let comp = this.perticularsearch ? this.perticularsearch.toLowerCase() : ''
-      return str.includes(comp)
-    })
+  perticularoptonssearch(str: string) {
+    return str.toLowerCase().includes(this.perticularsearch.toLowerCase())
+  }
+  focusonsearch() {
+    document.getElementById("perticularid")?.focus()
+  }
+  focusonsearchengine() {
+    document.getElementById("engineoilid")?.focus()
   }
 }

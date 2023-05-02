@@ -131,4 +131,9 @@ export class HomeComponent implements OnInit {
     if (str === undefined) return true;
     return (str.toLowerCase()).includes(this.searchselected.toLowerCase())
   }
+  logout() {
+    sessionStorage.clear();
+    localStorage.clear();
+    this.route.navigateByUrl("login")
+  }
 }

@@ -151,7 +151,7 @@ export class FormComponent implements OnInit {
       this.perticulars[1].credit = parseFloat(this.totalengineoils.toFixed(2));
     }
   }
-  perticularchage() {
+  perticularchage(name?: string, i?: number) {
     this.credit = 0;
     this.debit = 0;
     this.leftovercash = 0;
@@ -160,6 +160,9 @@ export class FormComponent implements OnInit {
       this.debit = this.debit + element.debit;
     });
     this.leftovercash = this.credit - this.debit;
+    if (name && i !== undefined) {
+      document.getElementById(name + (i + 1))?.focus();
+    }
   }
   initialcaluclatins() {
     this.totaloils = 0;
@@ -372,5 +375,14 @@ export class FormComponent implements OnInit {
   }
   goback() {
     this.route.navigateByUrl("index")
+  }
+  checkenter(eve: any, name: string) {
+    if (eve.keyCode === 13) {
+      if (name === 'addengineoils') {
+        this.addengineoils();
+      } else {
+        this.addperticulars();
+      }
+    }
   }
 }

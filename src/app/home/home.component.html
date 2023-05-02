@@ -1,4 +1,7 @@
 <div class="Bgimage">
+    <div style="display: flex; justify-content: flex-end;">
+        <button type="button" class="btn btn-warning m-2"(click)="logout()">Logout</button>
+    </div>
     <div style="padding:5px">
         <button type="button" class="btn btn-primary m-2"(click)="balance()">ADD or check balnce</button>
         <button type="button" class="btn btn-primary m-2"(click)="engineoils()">ADD or check engine oils</button>
@@ -8,9 +11,9 @@
         <div class="justsupport">
             <input type="text" [(ngModel)]="searchselected" placeholder="search here">
             <div *ngFor="let item of selected">
-                <div class="subpoopover" *ngIf="selectedincludecheck(item['name'])">
-                    <div  *ngFor="let col of colselected" >
-                        <ng-container *ngIf="col !== 'exist'">
+                <div class="subpoopover row " *ngIf="selectedincludecheck(item['name'])">
+                    <div class="col-sm-6 " *ngFor="let col of colselected" >
+                        <ng-container *ngIf="col !== 'exist'" >
                             <input type="text" [(ngModel)]="item[col]" [disabled]="item['exist']">
                         </ng-container>
                     </div>

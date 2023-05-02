@@ -59,21 +59,21 @@
             <div>
                 <div class="col-11 Matbg">
                     <div class="row perticularrow headercol" style="padding: 10px">
-                        <div class="col-sm-4 headercol">
+                        <div class="col-lg-4 headercol">
                             <div class="eachcol">Engine Oil</div>
                         </div>
-                        <div class="col-sm-4 headercol">
+                        <div class="col-lg-4 headercol">
                             <div class="eachcol">QTY Left</div>
                             <div class="eachcol">QTY</div>
                         </div>
-                        <div class="col-sm-4 headercol">
+                        <div class="col-lg-4 headercol">
                             <div class="eachcol">price</div>
                             <div class="eachcol">Action</div>
                         </div>
                     </div>
                     <ng-container *ngFor="let eachoil of engineoils; index as i" style="overflow: scroll">
                         <div class="row perticularrow">
-                            <div class="col-sm-4 headercol">
+                            <div class="col-lg-4 headercol">
                                 <div>
                                     <mat-form-field appearance="fill">
                                         <mat-label>
@@ -94,7 +94,7 @@
                                     </mat-form-field>
                                 </div>
                             </div>
-                            <div class="col-sm-4 headercol">
+                            <div class="col-lg-4 headercol">
                                 <div>
                                     {{ engineoilsoptions[eachoil.id]?.qty | json }}
                                 </div>
@@ -102,7 +102,7 @@
                                     <input type="number" [(ngModel)]="eachoil.qty" />
                                 </div>
                             </div>
-                            <div class="col-sm-4 headercol">
+                            <div class="col-lg-4 headercol">
                                 <div>
                                     <input type="number" [(ngModel)]="eachoil.price"
                                         (change)="engineoilpricechange()" />
@@ -120,7 +120,7 @@
                     </div>
                     <div class="addbutton">
                         Add &nbsp;
-                        <input type="number" [(ngModel)]="page" class="buttonBg" style="width: 40px" />
+                        <input type="number" [(ngModel)]="page" class="buttonBg" style="width: 40px" (keyup) = "checkenter($event,'addengineoils')" />
                         More Oils
                         <button type="submit" class="buttonBg" (click)="addengineoils()">
                             ✓
@@ -136,14 +136,14 @@
             <div>
                 <div class="col-11 Matbg">
                     <div class="row perticularrow headercol " style="padding: 10px">
-                        <div class="col-sm-4 headercol">
+                        <div class="col-lg-4 headercol">
                             <div class="eachcol">Accounts</div>
                         </div>
-                        <div class="col-sm-4 headercol">
+                        <div class="col-lg-4 headercol">
                             <div class="eachcol">Credit</div>
                             <div class="eachcol">Debit</div>
                         </div>
-                        <div class="col-sm-4 headercol">
+                        <div class="col-lg-4 headercol">
                             <div class="eachcol">Action</div>
                         </div>
                         
@@ -151,7 +151,7 @@
                     </div>
                     <ng-container *ngFor="let account of perticulars; index as i">
                         <div class="row perticularrow headercol">
-                            <div class="col-sm-4 headercol">
+                            <div class="col-lg-4 headercol">
                                 <div>
                                     <mat-form-field appearance="fill">
                                         <mat-select (selectionChange)="perticularsselected($event, i)"
@@ -170,17 +170,17 @@
                                     </mat-form-field>
                                 </div>
                             </div>
-                            <div class="col-sm-4 headercol">
+                            <div class="col-lg-4 headercol">
                                 <div>
-                                    <input type="number" [(ngModel)]="account.credit" (change)="perticularchage()"
-                                        [disabled]="account.disable" />
+                                    <input type="number" [(ngModel)]="account.credit" (change)="perticularchage('credit',i)"
+                                        [disabled]="account.disable" [id] = "'credit'+i" />
                                 </div>
                                 <div>
-                                    <input type="number" [(ngModel)]="account.debit" (change)="perticularchage()"
-                                        [disabled]="account.disable" />
+                                    <input type="number" [(ngModel)]="account.debit" (change)="perticularchage('debit',i)"
+                                        [disabled]="account.disable" [id] = "'debit'+i" />
                                 </div>
                             </div>
-                            <div class="col-sm-4 headercol">
+                            <div class="col-lg-4 headercol">
                                 <div>
                                     <button style="color: red" (click)="removeperticular(i)" class="buttonBg"
                                         [disabled]="account.disable">
@@ -191,13 +191,13 @@
                         </div>
                     </ng-container>
                     <div class="headercol" style="padding: 10px">
-                        <div class="col-sm-6 headercol">
+                        <div class="col-lg-6 headercol">
                             <div class="emptydiv">
 
                             </div>
                             <div class=" totaloildisp">Total : {{ leftovercash }}</div>
                         </div>
-                        <div class="col-sm-6 headercol">
+                        <div class="col-lg-6 headercol">
                             <div>
                                 {{ credit }}
                             </div>
@@ -208,7 +208,7 @@
                     </div>
                     <div class="addbutton">
                         Add &nbsp;
-                        <input type="number" [(ngModel)]="page" class="buttonBg" style="width: 40px" />
+                        <input type="number" [(ngModel)]="page" class="buttonBg" style="width: 40px" (keyup) = "checkenter($event,'addperticulars')"/>
                         More Transactions
                         <button type="submit" class="buttonBg" (click)="addperticulars()">
                             ✓
